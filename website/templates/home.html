@@ -1,0 +1,505 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home | {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    /* Hero Section Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero-content > * {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+
+    .hero-content h1 { animation-delay: 0.2s; }
+    .hero-content p { animation-delay: 0.4s; }
+    .hero-content .buttons { animation-delay: 0.6s; }
+
+    /* Hero Button Styles */
+    .hero-btn {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border-radius: 30px;
+        padding: 12px 32px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .hero-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: all 0.6s ease;
+    }
+
+    .hero-btn:hover::before {
+        left: 100%;
+    }
+
+    .hero-btn.primary {
+        background: var(--accent-color);
+        border: none;
+        color: white;
+    }
+
+    .hero-btn.primary:hover {
+        background: var(--hover-color);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46,204,113,0.3);
+    }
+
+    .hero-btn.secondary {
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+    }
+
+    .hero-btn.secondary:hover {
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-2px);
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+        background: linear-gradient(120deg, #2ecc71, #27ae60);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+</style>
+
+<!-- 🌾 Hero Section -->
+<section class="position-relative d-flex align-items-center justify-content-center" 
+    style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('{% static 'imageTop.jpg' %}') center/cover no-repeat fixed; 
+           min-height: 100vh; width: 100%;">
+    
+    <!-- Hero Content -->
+    <div class="hero-content text-center text-white position-relative" style="z-index: 1;">
+        <h1 class="display-2 fw-bold mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+            Kisan <span class="text-success">Khata</span>
+        </h1>
+        <p class="lead mb-5" style="font-size: 1.4rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            Empowering Farmers with Smart Market Insights
+        </p>
+        <div class="buttons d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'login' %}" class="hero-btn primary">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+            <a href="{% url 'register' %}" class="hero-btn secondary">
+                <i class="fas fa-user-plus me-2"></i>Register as Farmer
+            </a>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="position-absolute bottom-0 start-50 translate-middle-x mb-4 text-white" 
+         style="animation: bounce 2s infinite;">
+        <i class="fas fa-chevron-down fa-2x" style="opacity: 0.7;"></i>
+    </div>
+</section>
+
+<!-- 🌿 Features Section -->
+<section class="container py-5">
+    <div class="text-center mb-5">
+        <h6 class="text-success text-uppercase fw-bold mb-2">Why Choose Us</h6>
+        <h2 class="display-5 fw-bold mb-4">Smart Features for Modern Farming</h2>
+        <div class="mx-auto" style="max-width: 600px;">
+            <p class="text-muted lead">Empowering farmers with cutting-edge technology and real-time insights for better agricultural decisions.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Market Data Card -->
+        <div class="col-md-4">
+            <div class="card feature-card h-100 border-0 bg-light">
+                <div class="card-body p-4">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-chart-line fa-2x text-success"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Real-Time Market Data</h4>
+                    <p class="text-muted mb-0">Stay ahead with live crop prices and market trends. Make informed decisions about when and where to sell your produce.</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pb-4 px-4">
+                    <a href="{% url 'market' %}" class="btn btn-link text-success p-0">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Card -->
+        <div class="col-md-4">
+            <div class="card feature-card h-100 border-0 bg-light">
+                <div class="card-body p-4">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-cloud-sun fa-2x text-success"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Weather Insights</h4>
+                    <p class="text-muted mb-0">Get precise weather forecasts and agricultural advisories to optimize your farming schedule and protect your crops.</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pb-4 px-4">
+                    <a href="{% url 'weather' %}" class="btn btn-link text-success p-0">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Farming Card -->
+        <div class="col-md-4">
+            <div class="card feature-card h-100 border-0 bg-light">
+                <div class="card-body p-4">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-brain fa-2x text-success"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Smart Farming Advice</h4>
+                    <p class="text-muted mb-0">Access AI-powered recommendations for crop management, pest control, and optimal resource utilization.</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pb-4 px-4">
+                    <a href="#" class="btn btn-link text-success p-0">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .feature-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(46,204,113,0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(46,204,113,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-link {
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-link:hover {
+            transform: translateX(5px);
+        }
+
+        .btn-link i {
+            transition: all 0.3s ease;
+        }
+
+        .btn-link:hover i {
+            transform: translateX(5px);
+        }
+    </style>
+</section>
+
+<!-- 🚜 Get Started Section -->
+<section class="py-6 position-relative overflow-hidden">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left: Image with floating elements -->
+            <div class="col-lg-6 position-relative mb-5 mb-lg-0">
+                <div class="position-relative">
+                    <!-- Main Image -->
+                    <img src="{% static 'farmer2.jpg' %}" alt="Smart Farming" 
+                         class="img-fluid rounded-4 shadow-lg" 
+                         style="transform: rotate(-2deg);">
+                    
+                    <!-- Decorative Elements -->
+                    <div class="position-absolute top-0 start-0 translate-middle-y"
+                         style="z-index: -1; width: 200px; height: 200px; background: radial-gradient(circle, rgba(46,204,113,0.1) 0%, rgba(46,204,113,0) 70%);"></div>
+                    
+                    <div class="position-absolute bottom-0 end-0 translate-middle-x"
+                         style="z-index: -1; width: 150px; height: 150px; background: radial-gradient(circle, rgba(46,204,113,0.1) 0%, rgba(46,204,113,0) 70%);"></div>
+                </div>
+            </div>
+
+            <!-- Right: Content -->
+            <div class="col-lg-6">
+                <div class="pe-lg-5">
+                    <h6 class="text-success text-uppercase fw-bold mb-3">Get Started Today</h6>
+                    <h2 class="display-5 fw-bold mb-4">Transform Your Farming with Technology</h2>
+                    <p class="lead text-muted mb-5">
+                        Join thousands of farmers who are already using data-driven insights to increase their yields and profits. Get started with smart farming today.
+                    </p>
+                    
+                    <!-- Features List -->
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="feature-check me-3">
+                                <i class="fas fa-check-circle text-success"></i>
+                            </div>
+                            <p class="mb-0">Real-time market prices and trends</p>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="feature-check me-3">
+                                <i class="fas fa-check-circle text-success"></i>
+                            </div>
+                            <p class="mb-0">Smart weather alerts and forecasts</p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="feature-check me-3">
+                                <i class="fas fa-check-circle text-success"></i>
+                            </div>
+                            <p class="mb-0">AI-powered farming recommendations</p>
+                        </div>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <a href="{% url 'register' %}" class="btn btn-success btn-lg px-5 py-3 rounded-pill">
+                        Get Started Now <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .py-6 { padding-top: 5rem; padding-bottom: 5rem; }
+        
+        .feature-check i {
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+
+        .btn-success {
+            transition: all 0.3s ease;
+            border: none;
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            box-shadow: 0 4px 15px rgba(46,204,113,0.2);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46,204,113,0.3);
+            background: linear-gradient(45deg, #27ae60, #219a52);
+        }
+
+        @media (max-width: 991.98px) {
+            .py-6 {
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+            }
+        }
+    </style>
+</section>
+
+<!-- 💹 Market Prices -->
+<!-- <section class="container py-5">
+  <h2 class="fw-bold text-center mb-4">Today's Market Prices</h2>
+  <div class="table-responsive shadow-sm">
+    <table class="table table-bordered align-middle text-center">
+      <thead class="table-success">
+        <tr>
+          <th>Crop</th>
+          <th>City</th>
+          <th>Price (PKR / kg)</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tomato</td>
+          <td>Lahore</td>
+          <td>120</td>
+          <td class="text-success">↑ Rising</td>
+        </tr>
+        <tr>
+          <td>Potato</td>
+          <td>Karachi</td>
+          <td>65</td>
+          <td class="text-danger">↓ Falling</td>
+        </tr>
+        <tr>
+          <td>Onion</td>
+          <td>Multan</td>
+          <td>80</td>
+          <td class="text-success">↑ Rising</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-center mt-4">
+    <a href="{% url 'market' %}" class="btn btn-outline-success px-4">View Full Dashboard</a>
+  </div>
+</section> -->
+
+<!-- 👨‍🌾 Community Forum Section -->
+<section class="community-section position-relative py-6 overflow-hidden">
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h6 class="text-white text-uppercase fw-bold mb-3">Community</h6>
+                <h2 class="display-4 text-white fw-bold mb-4">Join Our Farming Community</h2>
+                <p class="lead text-white-50 mb-5">
+                    Connect with thousands of farmers, share experiences, and learn from each other. 
+                    Our community forum is the perfect place to grow together.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'forum_home' %}" class="btn btn-light btn-lg px-5 py-3 rounded-pill">
+                        Visit Forum <i class="fas fa-comments ms-2"></i>
+                    </a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
+                        Join Community <i class="fas fa-users ms-2"></i>
+                    </a>
+                </div>
+
+                <!-- Stats -->
+                <div class="row mt-5 pt-5 g-4">
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="text-white fw-bold mb-2"><span class="counter">5000</span>+</h3>
+                            <p class="text-white-50 mb-0">Active Farmers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="text-white fw-bold mb-2"><span class="counter">1500</span>+</h3>
+                            <p class="text-white-50 mb-0">Daily Discussions</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="text-white fw-bold mb-2"><span class="counter">50</span>+</h3>
+                            <p class="text-white-50 mb-0">Expert Advisors</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .community-section {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            position: relative;
+        }
+
+        .community-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .stat-item {
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .counter {
+            display: inline-block;
+        }
+
+        .btn-light {
+            background: white;
+            color: #2ecc71;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-light:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn-outline-light {
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-light:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .stat-item {
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                padding: 1.5rem 0;
+            }
+            
+            .stat-item:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+
+    <!-- Add counter animation -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+
+            const animateCounter = (counter) => {
+                const target = parseInt(counter.textContent);
+                let count = 0;
+                const inc = target / speed;
+                
+                const updateCount = () => {
+                    if (count < target) {
+                        count += inc;
+                        counter.textContent = Math.ceil(count);
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.textContent = target;
+                    }
+                }
+                updateCount();
+            }
+
+            // Intersection Observer to start counter when visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            counters.forEach(counter => observer.observe(counter));
+        });
+    </script>
+</section>
+
+{% endblock %}

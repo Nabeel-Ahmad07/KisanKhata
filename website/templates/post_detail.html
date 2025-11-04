@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="forum-container">
+  <div class="container py-4">
+    <div class="forum-header mb-4">
+      <h2 class="mb-0">
+        <i class="fas fa-comments me-2"></i>Discussion
+      </h2>
+      <p class="text-muted mb-0">Join the conversation</p>
+    </div>
+
+    <div class="post-detail-card mb-4">
+      <div class="post-content">
+        <div class="post-header mb-3">
+          <div class="post-author">
+            <i class="fas fa-user-circle me-2"></i>
+            <span class="author-name">{{ post.author.username }}</span>
+            <span class="post-date">
+              <i class="far fa-calendar-alt ms-3 me-1"></i>
+              {{ post.created_at|date:"M d, Y" }}
+            </span>
+          </div>
+        </div>
+        <h3 class="post-title mb-3">{{ post.title }}</h3>
+        <div class="post-text">{{ post.content }}</div>
+      </div>
+    </div>
+
+    <div class="comments-section">
+      <div class="section-header mb-3">
+        <h4><i class="far fa-comments me-2"></i>Comments</h4>
+      </div>
+
+      <div class="comment-form mb-4">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-floating mb-3">
+            <textarea name="comment" class="form-control custom-textarea" 
+                      placeholder="Share your thoughts..." id="commentText" 
+                      style="height: 100px" required></textarea>
+            <label for="commentText">Share your thoughts...</label>
+          </div>
+          <button type="submit" class="custom-button">
+            <i class="fas fa-paper-plane me-2"></i>Post Comment
+          </button>
+        </form>
+      </div>
+
+      <div class="comments-list">
+        {% for comment in comments %}
+        <div class="comment-card mb-3">
+          <div class="comment-content">
+            <p class="comment-text mb-2">{{ comment.content }}</p>
+            <div class="comment-meta">
+              <i class="fas fa-user-circle me-1"></i>
+              <span class="author-name">{{ comment.author.username }}</span>
+              <span class="comment-date">
+                <i class="far fa-calendar-alt ms-2 me-1"></i>
+                {{ comment.created_at|date:"M d, Y" }}
+              </span>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+          <i class="far fa-comment-dots fa-3x mb-3"></i>
+          <p class="mb-0">No comments yet. Start the conversation!</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .forum-container {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 1.5rem 0;
+  }
+
+  .forum-header {
+    border-left: 4px solid #2ecc71;
+    padding-left: 1rem;
+  }
+
+  .forum-header h2 {
+    color: #2c3e50;
+  }
+
+  .post-detail-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+
+  .post-content {
+    padding: 1.5rem;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .post-author {
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+
+  .author-name {
+    font-weight: 500;
+    color: #2c3e50;
+  }
+
+  .post-date {
+    color: #6c757d;
+  }
+
+  .post-title {
+    color: #2c3e50;
+  }
+
+  .post-text {
+    color: #2c3e50;
+    line-height: 1.6;
+  }
+
+  .section-header h4 {
+    color: #2c3e50;
+    font-weight: 500;
+  }
+
+  .custom-textarea {
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    resize: none;
+  }
+
+  .custom-textarea:focus {
+    border-color: #2ecc71;
+    box-shadow: 0 0 0 0.2rem rgba(46,204,113,0.25);
+  }
+
+  .custom-button {
+    background: #2ecc71;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    color: white;
+  }
+
+  .custom-button:hover {
+    background: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(46,204,113,0.2);
+    color: white;
+  }
+
+  .comment-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+
+  .comment-content {
+    padding: 1rem 1.5rem;
+  }
+
+  .comment-text {
+    color: #2c3e50;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .comment-meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 15px;
+    color: #6c757d;
+  }
+
+  @media (max-width: 768px) {
+    .post-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+{% endblock %}

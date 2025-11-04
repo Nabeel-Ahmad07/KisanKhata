@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Register | {{ block.super }}{% endblock %}
+{% block content %}
+
+<style>
+    .register-section {
+        min-height: 100vh;
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+                    url('{% static 'imageTop.jpg' %}') center/cover no-repeat fixed;
+        padding: 2rem 0;
+    }
+
+    .register-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: slideUp 0.6s ease forwards;
+    }
+
+    @keyframes slideUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46,204,113,0.15);
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 10;
+    }
+
+    .input-with-icon {
+        padding-left: 45px;
+    }
+
+    .register-btn {
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 10px;
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .register-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46,204,113,0.3);
+        background: linear-gradient(45deg, #27ae60, #219a52);
+    }
+
+    .login-link {
+        color: #2ecc71;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .login-link:hover {
+        color: #27ae60;
+        text-decoration: underline;
+    }
+
+    .brand-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        transform: rotate(-10deg);
+        transition: all 0.3s ease;
+    }
+
+    .brand-icon:hover {
+        transform: rotate(0deg);
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #2d3436;
+    }
+</style>
+
+<section class="register-section d-flex align-items-center justify-content-center">
+    <div class="register-card p-4 p-md-5">
+        <div class="text-center mb-4">
+            <div class="brand-icon">
+                <i class="fas fa-user-plus fa-2x text-white"></i>
+            </div>
+            <h2 class="fw-bold text-success mb-2">Create Account</h2>
+            <p class="text-muted">Join the KisanKhata farming community</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <div class="input-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" name="username" 
+                           class="form-control input-with-icon" 
+                           placeholder="Choose a username"
+                           required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" name="email" 
+                           class="form-control input-with-icon" 
+                           placeholder="Enter your email"
+                           required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" name="password" 
+                           class="form-control input-with-icon" 
+                           placeholder="Create a password"
+                           required>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <div class="input-group">
+                    <i class="fas fa-check-circle input-icon"></i>
+                    <input type="password" name="confirm" 
+                           class="form-control input-with-icon" 
+                           placeholder="Confirm password"
+                           required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success register-btn w-100 mb-4">
+                Create Account <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+            
+            <div class="text-center">
+                <p class="mb-0 text-muted">
+                    Already have an account? 
+                    <a href="{% url 'login' %}" class="login-link">Sign In</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

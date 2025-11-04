@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-container">
+    <div class="container py-4">
+        <!-- Header Section -->
+        <div class="dashboard-header mb-4">
+                        <h2 class="mb-0">
+                <i class="fas fa-tractor me-2"></i>Farmer Dashboard
+            </h2>
+            <p class="text-muted mb-0">Welcome to your agricultural control center</p>
+        </div>
+
+        <!-- Quick Access Cards -->
+        <div class="row g-4 mb-4">
+            <!-- Weather Card -->
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'weather' %}" class="feature-card weather-card">
+                    <div class="card-icon">
+                        <i class="fas fa-cloud-sun"></i>
+                    </div>
+                    <h4>Weather Forecast</h4>
+                    {% if weather %}
+                    <p class="mb-0">{{ weather.condition }} — {{ weather.temp }}°C</p>
+                    {% else %}
+                    <p class="mb-0">Check detailed weather</p>
+                    {% endif %}
+                </a>
+            </div>
+
+            <!-- Forum Card -->
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'forum_home' %}" class="feature-card forum-card">
+                    <div class="card-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h4>Farmer Forum</h4>
+                    <p class="mb-0">Connect with other farmers</p>
+                </a>
+            </div>
+
+            <!-- Market Card -->
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'market' %}" class="feature-card market-card">
+                    <div class="card-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h4>Market Prices</h4>
+                    <p class="mb-0">View latest market rates</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filter-section mb-4">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select name="province" class="form-select custom-select" id="provinceSelect">
+                            <option value="">All Provinces</option>
+                            <option value="Punjab" {% if province == 'Punjab' %}selected{% endif %}>Punjab</option>
+                            <option value="Sindh" {% if province == 'Sindh' %}selected{% endif %}>Sindh</option>
+                            <option value="KPK" {% if province == 'KPK' %}selected{% endif %}>KPK</option>
+                            <option value="Balochistan" {% if province == 'Balochistan' %}selected{% endif %}>Balochistan</option>
+                        </select>
+                        <label for="provinceSelect"><i class="fas fa-map-marker-alt me-2"></i>Province</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select name="category" class="form-select custom-select" id="categorySelect">
+                            <option value="">All Categories</option>
+                            <option value="Fruit" {% if category == 'Fruit' %}selected{% endif %}>Fruit</option>
+                            <option value="Vegetable" {% if category == 'Vegetable' %}selected{% endif %}>Vegetable</option>
+                        </select>
+                        <label for="categorySelect"><i class="fas fa-list me-2"></i>Category</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary custom-button w-100">
+                        <i class="fas fa-filter me-2"></i>Apply Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Market Data Table -->
+        <div class="table-responsive market-table-wrapper">
+            <table class="table market-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Province</th>
+                        <th>Price (PKR)</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <div class="fw-bold">{{ item.name }}</div>
+                        </td>
+                        <td>
+                            <span class="badge {% if item.category == 'Fruit' %}bg-warning{% else %}bg-success{% endif %} bg-opacity-10 text-{% if item.category == 'Fruit' %}warning{% else %}success{% endif %}">
+                                {% if item.category == "Fruit" %}
+                                    <i class="fas fa-apple-alt me-1"></i>
+                                {% else %}
+                                    <i class="fas fa-carrot me-1"></i>
+                                {% endif %}
+                                {{ item.category }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                {{ item.province }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                <i class="fas fa-tag me-1"></i>
+                                {{ item.price }} PKR
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-muted small">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                {{ item.date }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="text-muted">
+                                <i class="fas fa-box-open fa-3x mb-3"></i>
+                                <p class="mb-0">No market data available</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        background: #f8f9fa;
+        min-height: 100vh;
+        padding: 1.5rem 0;
+    }
+
+    .dashboard-header {
+        border-left: 4px solid #2ecc71;
+        padding-left: 1rem;
+    }
+    
+    .dashboard-header h2 {
+        color: #2c3e50;
+    }
+
+    .feature-card {
+        display: block;
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #2c3e50;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        color: #2c3e50;
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .weather-card .card-icon { 
+        background: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+    .forum-card .card-icon { 
+        background: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+    }
+    .market-card .card-icon { 
+        background: rgba(25, 135, 84, 0.1);
+        color: #198754;
+    }
+
+    .custom-select {
+        background: white;
+        border: 1px solid #dee2e6;
+        color: #2c3e50;
+        font-size: 0.9rem;
+    }
+
+    .custom-select:focus {
+        background: white;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46,204,113,0.25);
+        color: #2c3e50;
+    }
+
+    .custom-button {
+        background: #2ecc71;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        font-weight: 500;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        height: 58px;
+        color: white;
+    }
+
+    .custom-button:hover {
+        background: #27ae60;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(46,204,113,0.2);
+        color: white;
+    }
+
+    .market-table-wrapper {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .market-table {
+        margin-bottom: 0;
+    }
+
+    .market-table thead {
+        background: #f8f9fa;
+        color: #2c3e50;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .market-table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 1rem;
+        border: none;
+    }
+
+    .market-table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .market-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .market-table tbody tr:hover {
+        background: rgba(76,175,80,0.05);
+    }
+
+    .badge {
+        font-weight: 500;
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+    }
+
+    .form-floating label {
+        color: #6c757d;
+    }
+
+    .form-floating > .form-select {
+        padding-top: 1.625rem;
+        padding-bottom: 0.625rem;
+        height: 58px;
+    }
+
+    /* Light theme adjustments */
+    .custom-select option {
+        background-color: white;
+        color: #2c3e50;
+    }
+
+    .badge {
+        font-weight: 500;
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+    }
+
+    .market-table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 1rem;
+        border: none;
+    }
+
+    .market-table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .market-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .market-table tbody tr:hover {
+        background: rgba(46,204,113,0.05);
+    }
+
+    @media (max-width: 768px) {
+        .feature-card {
+            margin-bottom: 1rem;
+        }
+        
+        .custom-button {
+            margin-top: 1rem;
+        }
+    }
+</style>
+{% endblock %}

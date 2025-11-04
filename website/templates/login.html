@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login | {{ block.super }}{% endblock %}
+{% block content %}
+
+<style>
+    .login-section {
+        min-height: 90vh;
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('{% static 'imageTop.jpg' %}') center/cover no-repeat fixed;
+        position: relative;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: slideUp 0.6s ease forwards;
+    }
+
+    @keyframes slideUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46,204,113,0.15);
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 10;
+    }
+
+    .input-with-icon {
+        padding-left: 45px;
+    }
+
+    .login-btn {
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 10px;
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46,204,113,0.3);
+        background: linear-gradient(45deg, #27ae60, #219a52);
+    }
+
+    .brand-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        transform: rotate(-10deg);
+        transition: all 0.3s ease;
+    }
+
+    .brand-icon:hover {
+        transform: rotate(0deg);
+    }
+
+    .register-link {
+        color: #2ecc71;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .register-link:hover {
+        color: #27ae60;
+        text-decoration: underline;
+    }
+</style>
+
+<section class="login-section d-flex align-items-center justify-content-center">
+    <div class="login-card p-4 p-md-5">
+        <div class="text-center mb-4">
+            <div class="brand-icon">
+                <i class="fas fa-leaf fa-2x text-white"></i>
+            </div>
+            <h2 class="fw-bold text-success mb-2">Welcome Back</h2>
+            <p class="text-muted">Sign in to access your KisanKhata account</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <div class="input-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" name="username" 
+                           class="form-control input-with-icon" 
+                           placeholder="Enter your username"
+                           required>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" name="password" 
+                           class="form-control input-with-icon" 
+                           placeholder="Enter your password"
+                           required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success login-btn w-100 mb-4">
+                Sign In <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+            
+            <div class="text-center">
+                <p class="mb-0 text-muted">
+                    Don't have an account? 
+                    <a href="{% url 'register' %}" class="register-link">Register Now</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

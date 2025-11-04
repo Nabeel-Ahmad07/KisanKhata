@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | {{ block.super }}{% endblock %}
+{% block content %}
+
+<style>
+    .admin-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+    }
+
+    .stat-items::before { background: linear-gradient(45deg, #2ecc71, #27ae60); }
+    .stat-categories::before { background: linear-gradient(45deg, #3498db, #2980b9); }
+    .stat-provinces::before { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+    .stat-price::before { background: linear-gradient(45deg, #f1c40f, #f39c12); }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .bg-success-soft { background: rgba(46,204,113,0.1); color: #2ecc71; }
+    .bg-primary-soft { background: rgba(52,152,219,0.1); color: #3498db; }
+    .bg-purple-soft { background: rgba(155,89,182,0.1); color: #9b59b6; }
+    .bg-warning-soft { background: rgba(241,196,15,0.1); color: #f1c40f; }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0.5rem 0;
+        background: linear-gradient(45deg, #2c3e50, #34495e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .admin-actions {
+        background: white;
+        border-radius: 15px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .add-item-btn {
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .add-item-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46,204,113,0.3);
+        background: linear-gradient(45deg, #27ae60, #219a52);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-delay-1 { animation-delay: 0.1s; }
+    .animate-delay-2 { animation-delay: 0.2s; }
+    .animate-delay-3 { animation-delay: 0.3s; }
+    .animate-delay-4 { animation-delay: 0.4s; }
+</style>
+
+<section class="admin-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h6 class="text-success text-uppercase fw-bold mb-2">Admin Dashboard</h6>
+            <h2 class="display-5 fw-bold mb-4">Market Management</h2>
+            <p class="text-muted lead mx-auto" style="max-width: 600px;">
+                Manage and monitor all market items, prices, and statistics
+            </p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="stat-card stat-items animate-fade-in animate-delay-1">
+                    <div class="stat-icon bg-success-soft">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h5 class="text-muted mb-2">Total Items</h5>
+                    <div class="stat-value">{{ total_items }}</div>
+                    <p class="text-muted mb-0">Listed Products</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card stat-categories animate-fade-in animate-delay-2">
+                    <div class="stat-icon bg-primary-soft">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h5 class="text-muted mb-2">Categories</h5>
+                    <div class="stat-value">{{ total_categories }}</div>
+                    <p class="text-muted mb-0">Product Types</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card stat-provinces animate-fade-in animate-delay-3">
+                    <div class="stat-icon bg-purple-soft">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h5 class="text-muted mb-2">Provinces</h5>
+                    <div class="stat-value">{{ total_provinces }}</div>
+                    <p class="text-muted mb-0">Locations</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card stat-price animate-fade-in animate-delay-4">
+                    <div class="stat-icon bg-warning-soft">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <h5 class="text-muted mb-2">Average Price</h5>
+                    <div class="stat-value">{{ avg_price }}</div>
+                    <p class="text-muted mb-0">PKR</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Actions -->
+        <div class="admin-actions d-flex justify-content-between align-items-center animate-fade-in">
+            <div>
+                <h4 class="mb-0 fw-bold">Market Items</h4>
+                <p class="text-muted mb-0">Manage all market items and prices</p>
+            </div>
+            <a href="{% url 'add_item' %}" class="btn btn-success add-item-btn">
+                <i class="fas fa-plus me-2"></i>Add New Item
+            </a>
+        </div>
+
+        <!-- Items Table -->
+        <div class="table-responsive market-table animate-fade-in">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Province</th>
+                        <th>Price (PKR)</th>
+                        <th>Date</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td class="text-center">
+                            <span class="badge bg-light text-dark">#{{ item.id }}</span>
+                        </td>
+                        <td>
+                            <div class="fw-bold">{{ item.name }}</div>
+                        </td>
+                        <td>
+                            <span class="badge {% if item.category == 'Fruit' %}bg-warning{% else %}bg-success{% endif %} bg-opacity-10 text-{% if item.category == 'Fruit' %}warning{% else %}success{% endif %}">
+                                {% if item.category == "Fruit" %}
+                                    <i class="fas fa-apple-alt me-1"></i>
+                                {% else %}
+                                    <i class="fas fa-carrot me-1"></i>
+                                {% endif %}
+                                {{ item.category }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                {{ item.province }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                <i class="fas fa-tag me-1"></i>
+                                {{ item.price }} PKR
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-muted small">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                {{ item.date }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a href="{% url 'edit_item' item.id %}" 
+                                   class="btn btn-sm btn-outline-warning me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'delete_item' item.id %}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this item?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <div class="text-muted">
+                                <i class="fas fa-box-open fa-3x mb-3"></i>
+                                <p class="mb-0">No market data available</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <style>
+            .market-table {
+                background: white;
+                border-radius: 15px;
+                overflow: hidden;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            }
+
+            .market-table thead {
+                background: linear-gradient(45deg, #2ecc71, #27ae60);
+                color: white;
+            }
+
+            .market-table th {
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+                letter-spacing: 0.5px;
+                padding: 1rem;
+                border: none;
+            }
+
+            .market-table td {
+                padding: 1rem;
+                vertical-align: middle;
+                border-bottom: 1px solid #f1f1f1;
+            }
+
+            .market-table tbody tr {
+                transition: all 0.3s ease;
+            }
+
+            .market-table tbody tr:hover {
+                background: rgba(46,204,113,0.05);
+            }
+
+            .btn-outline-warning {
+                border-color: #f1c40f;
+                color: #f1c40f;
+            }
+
+            .btn-outline-warning:hover {
+                background: #f1c40f;
+                color: white;
+            }
+
+            .btn-outline-danger {
+                border-color: #e74c3c;
+                color: #e74c3c;
+            }
+
+            .btn-outline-danger:hover {
+                background: #e74c3c;
+                color: white;
+            }
+
+            .badge {
+                font-weight: 500;
+                padding: 0.5rem 0.8rem;
+                border-radius: 8px;
+            }
+        </style>
+    </div>
+</section>
+
+{% endblock %}

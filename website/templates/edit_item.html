@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width:600px;">
+    <div class="form-card">
+        <div class="text-center mb-4">
+            <div class="form-icon-wrapper mb-3">
+                <div class="form-icon">
+                    <i class="fas fa-edit"></i>
+                </div>
+            </div>
+            <h3 class="form-title">Edit Market Item</h3>
+            <p class="text-muted">Update the details of your market item</p>
+        </div>
+
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="fas fa-tag me-2"></i>Item Name
+                </label>
+                <input type="text" name="name" class="form-control custom-input" 
+                       value="{{ item.name }}" required>
+                <div class="invalid-feedback">Please enter an item name</div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="fas fa-money-bill-wave me-2"></i>Price (PKR)
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">PKR</span>
+                    <input type="number" step="0.01" name="price" 
+                           class="form-control custom-input" 
+                           value="{{ item.price }}" required>
+                    <div class="invalid-feedback">Please enter a valid price</div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="fas fa-map-marker-alt me-2"></i>Province
+                </label>
+                <select name="province" class="form-select custom-select" required>
+                    <option value="Punjab" {% if item.province == 'Punjab' %}selected{% endif %}>
+                        Punjab
+                    </option>
+                    <option value="Sindh" {% if item.province == 'Sindh' %}selected{% endif %}>
+                        Sindh
+                    </option>
+                    <option value="KPK" {% if item.province == 'KPK' %}selected{% endif %}>
+                        KPK
+                    </option>
+                    <option value="Balochistan" {% if item.province == 'Balochistan' %}selected{% endif %}>
+                        Balochistan
+                    </option>
+                </select>
+                <div class="invalid-feedback">Please select a province</div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="fas fa-list-alt me-2"></i>Category
+                </label>
+                <select name="category" class="form-select custom-select" required>
+                    <option value="Fruit" {% if item.category == 'Fruit' %}selected{% endif %}>
+                        <i class="fas fa-apple-alt"></i> Fruit
+                    </option>
+                    <option value="Vegetable" {% if item.category == 'Vegetable' %}selected{% endif %}>
+                        <i class="fas fa-carrot"></i> Vegetable
+                    </option>
+                </select>
+                <div class="invalid-feedback">Please select a category</div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-light btn-lg flex-grow-1 custom-button-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg flex-grow-1 custom-button">
+                    <i class="fas fa-check-circle me-2"></i>Update Item
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .form-icon-wrapper {
+        position: relative;
+        height: 80px;
+        width: 80px;
+        margin: 0 auto;
+    }
+
+    .form-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    .form-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .custom-input, .custom-select {
+        border: 2px solid #eee;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .custom-input:focus, .custom-select:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52,152,219,0.25);
+    }
+
+    .input-group-text {
+        background: #f8f9fa;
+        border: 2px solid #eee;
+        border-right: none;
+    }
+
+    .custom-button {
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        border: none;
+        padding: 1rem;
+        font-weight: 500;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .custom-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52,152,219,0.2);
+    }
+
+    .custom-button-secondary {
+        background: #f8f9fa;
+        border: 2px solid #eee;
+        color: #2c3e50;
+        transition: all 0.3s ease;
+    }
+
+    .custom-button-secondary:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .invalid-feedback {
+        font-size: 0.875rem;
+    }
+</style>
+
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %}

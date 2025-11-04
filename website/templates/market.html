@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% block title %}Market Prices{% endblock %}
+{% block content %}
+
+<style>
+    .market-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+
+    .page-title {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 2rem;
+    }
+
+    .page-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60%;
+        height: 4px;
+        background: linear-gradient(90deg, #2ecc71, transparent);
+        border-radius: 2px;
+    }
+
+    .filter-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+    }
+
+    .custom-select {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+        background: white;
+        cursor: pointer;
+    }
+
+    .custom-select:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46,204,113,0.15);
+    }
+
+    .filter-btn {
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46,204,113,0.2);
+    }
+
+    .market-table {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .market-table thead {
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        color: white;
+    }
+
+    .market-table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 1rem;
+        border: none;
+    }
+
+    .market-table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .market-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .market-table tbody tr:hover {
+        background: rgba(46,204,113,0.05);
+        transform: scale(1.01);
+    }
+
+    .price-badge {
+        background: rgba(46,204,113,0.1);
+        color: #2ecc71;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .category-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .category-fruit {
+        background: rgba(255,159,67,0.1);
+        color: #ff9f43;
+    }
+
+    .category-vegetable {
+        background: rgba(46,204,113,0.1);
+        color: #2ecc71;
+    }
+
+    .province-badge {
+        background: rgba(116,185,255,0.1);
+        color: #74b9ff;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .date-text {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease forwards;
+    }
+</style>
+
+<section class="market-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h6 class="text-success text-uppercase fw-bold mb-2">Market Intelligence</h6>
+            <h2 class="display-5 fw-bold mb-4">Live Market Prices</h2>
+            <p class="text-muted lead mx-auto" style="max-width: 600px;">
+                Stay updated with real-time agricultural commodity prices across Pakistan
+            </p>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-card animate-fade-in">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label text-muted mb-2">Select Province</label>
+                    <select name="province" class="form-select custom-select">
+                        <option value="">All Provinces</option>
+                        <option value="Punjab" {% if province == 'Punjab' %}selected{% endif %}>Punjab</option>
+                        <option value="Sindh" {% if province == 'Sindh' %}selected{% endif %}>Sindh</option>
+                        <option value="KPK" {% if province == 'KPK' %}selected{% endif %}>KPK</option>
+                        <option value="Balochistan" {% if province == 'Balochistan' %}selected{% endif %}>Balochistan</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted mb-2">Select Category</label>
+                    <select name="category" class="form-select custom-select">
+                        <option value="">All Categories</option>
+                        <option value="Fruit" {% if category == 'Fruit' %}selected{% endif %}>Fruit</option>
+                        <option value="Vegetable" {% if category == 'Vegetable' %}selected{% endif %}>Vegetable</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted mb-2">Apply Filter</label>
+                    <button type="submit" class="btn btn-success filter-btn w-100">
+                        <i class="fas fa-filter me-2"></i> Apply Filters
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Market Data -->
+        {% if items %}
+        <div class="market-table-container animate-fade-in">
+            <div class="table-responsive market-table">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Province</th>
+                            <th>Price (PKR)</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td class="fw-bold">{{ item.name }}</td>
+                            <td>
+                                <span class="category-badge {% if item.category == 'Fruit' %}category-fruit{% else %}category-vegetable{% endif %}">
+                                    {% if item.category == "Fruit" %}
+                                        <i class="fas fa-apple-alt me-2"></i>
+                                    {% else %}
+                                        <i class="fas fa-carrot me-2"></i>
+                                    {% endif %}
+                                    {{ item.category }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="province-badge">
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    {{ item.province }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="price-badge">
+                                    <i class="fas fa-tag me-2"></i>
+                                    {{ item.price }} PKR
+                                </span>
+                            </td>
+                            <td>
+                                <span class="date-text">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    {{ item.date }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-warning text-center mt-4 animate-fade-in" 
+             style="border-radius: 15px; border: none; background: rgba(255,159,67,0.1); color: #ff9f43;">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            No market items found for your selection.
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    // Add smooth transition when applying filters
+    document.querySelector('form').addEventListener('submit', function(e) {
+        document.querySelector('.market-table-container').style.opacity = '0.5';
+    });
+</script>
+
+{% endblock %}
