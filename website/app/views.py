@@ -4,16 +4,12 @@ from django.contrib import messages
 from .models import MarketItem, Post, Comment
 from django.db.models import Count, Avg
 
-
-# Create your views here.
 def home(request):
     return render(request, 'home.html')
 
-# ✅ Check if user is admin
 def is_admin(user):
     return user.is_superuser
 
-# ✅ Admin Dashboard
 @login_required
 @user_passes_test(is_admin)
 def admin_dashboard(request):
@@ -31,7 +27,6 @@ def admin_dashboard(request):
         'avg_price': avg_price,
     })
 
-# ✅ Add new market item
 @login_required
 @user_passes_test(is_admin)
 def add_item(request):
@@ -52,7 +47,6 @@ def add_item(request):
 
     return render(request, 'add_item.html')
 
-# ✅ Edit existing market item
 @login_required
 @user_passes_test(is_admin)
 def edit_item(request, item_id):
@@ -68,7 +62,6 @@ def edit_item(request, item_id):
 
     return render(request, 'edit_item.html', {'item': item})
 
-# ✅ Delete market item
 @login_required
 @user_passes_test(is_admin)
 def delete_item(request, item_id):
@@ -89,7 +82,6 @@ def farmer_dashboard(request):
     if category:
         items = items.filter(category=category)
 
-    # Mock weather data (can replace later with API)
     weather_data = {
         'Punjab': {'temp': 30, 'condition': 'Sunny ☀️'},
         'Sindh': {'temp': 34, 'condition': 'Hot 🔥'},
@@ -111,8 +103,6 @@ def farmer_dashboard(request):
 
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-
-# ---------- COMMUNITY FORUM ----------
 
 @login_required
 def forum_home(request):

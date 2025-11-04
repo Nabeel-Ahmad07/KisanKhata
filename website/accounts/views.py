@@ -1,10 +1,8 @@
-# accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-# Login View (for both admin & farmer)
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -22,7 +20,6 @@ def login_view(request):
     
     return render(request, 'login.html')
 
-# Farmer Registration
 def register_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -43,7 +40,7 @@ def register_view(request):
 
     return render(request, 'register.html')
 
-# Logout
+# 
 def logout_view(request):
     logout(request)
     return redirect('home')
